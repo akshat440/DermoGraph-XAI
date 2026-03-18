@@ -1,0 +1,12 @@
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+*.pth
+*.h5
+*.pkl
+*.zip
+dermograph-preprocessed-224/
+SKIN CANCER DATASET/
+cache/
+*.egg-info/

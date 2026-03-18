@@ -1,0 +1,70 @@
+{
+  "total_images": 10015,
+  "unique_lesions": 7470,
+  "classes": {
+    "nv": {
+      "full_name": "Melanocytic Nevi",
+      "count": 6705,
+      "percentage": 66.95,
+      "malignant": false
+    },
+    "mel": {
+      "full_name": "Melanoma",
+      "count": 1113,
+      "percentage": 11.11,
+      "malignant": true
+    },
+    "bkl": {
+      "full_name": "Benign Keratosis",
+      "count": 1099,
+      "percentage": 10.97,
+      "malignant": false
+    },
+    "bcc": {
+      "full_name": "Basal Cell Carcinoma",
+      "count": 514,
+      "percentage": 5.13,
+      "malignant": true
+    },
+    "akiec": {
+      "full_name": "Actinic Keratosis",
+      "count": 327,
+      "percentage": 3.27,
+      "malignant": true
+    },
+    "vasc": {
+      "full_name": "Vascular Lesion",
+      "count": 142,
+      "percentage": 1.42,
+      "malignant": false
+    },
+    "df": {
+      "full_name": "Dermatofibroma",
+      "count": 115,
+      "percentage": 1.15,
+      "malignant": false
+    }
+  },
+  "malignant_total": 1954,
+  "benign_total": 8061,
+  "malignant_pct": 19.51,
+  "age_stats": {
+    "mean": 51.86,
+    "median": 50.0,
+    "std": 16.97,
+    "min": 0,
+    "max": 85
+  },
+  "sex_distribution": {
+    "male": 5406,
+    "female": 4552,
+    "unknown": 57
+  },
+  "diagnosis_type": {
+    "histo": 5340,
+    "follow_up": 3704,
+    "consensus": 902,
+    "confocal": 69
+  },
+  "class_imbalance_ratio": 58.3
+}

@@ -1,0 +1,46 @@
+{
+  "top_locations": {
+    "back": 2192,
+    "lower extremity": 2077,
+    "trunk": 1404,
+    "upper extremity": 1118,
+    "abdomen": 1022,
+    "face": 745,
+    "chest": 407,
+    "foot": 319,
+    "unknown": 234,
+    "neck": 168
+  },
+  "melanoma_by_location": {
+    "back": 324,
+    "upper extremity": 213,
+    "lower extremity": 192,
+    "face": 104,
+    "chest": 68,
+    "abdomen": 66,
+    "trunk": 47,
+    "neck": 29,
+    "foot": 28,
+    "ear": 17,
+    "scalp": 14,
+    "unknown": 10,
+    "hand": 1
+  },
+  "gender_distribution": {
+    "male": 5406,
+    "female": 4552
+  },
+  "mf_ratio_by_class": {
+    "nv": 1.057,
+    "mel": 1.625,
+    "bkl": 1.352,
+    "bcc": 1.609,
+    "akiec": 2.085,
+    "vasc": 0.945,
+    "df": 1.212
+  },
+  "melanoma_gender": {
+    "male": 689,
+    "female": 424
+  }
+}
