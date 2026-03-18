@@ -12,18 +12,18 @@
 
 ## 📌 Overview
 
-DermoGraph-XAI is a comprehensive deep learning framework for automated skin lesion classification across **7 diagnostic categories**. The system benchmarks **12+ CNN and transformer architectures** and introduces **DermoNet** — a novel hybrid architecture combining dual-scale CNNs, Lesion-Aware Attention Gates (LAAG), and Multi-Resolution Transformer Blocks (MRTB).
+DermoGraph-XAI is a comprehensive deep learning framework for automated skin lesion classification across **7 diagnostic categories**. The system benchmarks **12+ CNN and transformer architectures** on a unified multi-dataset corpus and introduces **DermoNet** — a novel hybrid architecture combining Dual-Scale CNNs, Lesion-Aware Attention Gates (LAAG), and Multi-Resolution Transformer Blocks (MRTB).
 
 ### 7-Class Classification
-| Class | Label | Description |
-|---|---|---|
-| Melanoma | 0 | Malignant melanocytic tumor |
-| Nevi | 1 | Benign melanocytic nevus |
-| Basal Cell Carcinoma | 2 | Most common skin cancer |
-| Actinic Keratosis | 3 | Precancerous lesion / SCC |
-| Benign Keratosis | 4 | Seborrheic keratosis |
-| Dermatofibroma | 5 | Benign fibrous nodule |
-| Vascular | 6 | Vascular lesion |
+| Class | Label | Risk | Description |
+|---|---|---|---|
+| Melanoma | 0 | 🔴 HIGH | Malignant melanocytic tumor |
+| Nevi | 1 | 🟢 LOW | Benign melanocytic nevus |
+| Basal Cell Carcinoma | 2 | 🔴 HIGH | Most common skin cancer |
+| Actinic Keratosis | 3 | 🟡 MEDIUM | Precancerous lesion / SCC |
+| Benign Keratosis | 4 | 🟢 LOW | Seborrheic keratosis |
+| Dermatofibroma | 5 | 🟢 LOW | Benign fibrous nodule |
+| Vascular | 6 | 🟢 LOW | Vascular lesion |
 
 ---
 
@@ -37,10 +37,25 @@ DermoGraph-XAI is a comprehensive deep learning framework for automated skin les
 | DenseNet121 | 87.69% | 0.7663 | 0.9866 | 8M | Dense CNN |
 | EfficientNet-B0 | 89.37% | 0.7747 | 0.9850 | 5.3M | Efficient CNN |
 | EfficientNet-B3 | 90.70% | 0.8234 | 0.9845 | 12M | Efficient CNN |
-| **MaxViT-T** | **91.98%** | **0.8325** | **0.9840** | 31M | **Transformer** |
-| **DermoNet (ours)** | 🔄 | — | — | ~18M | **Novel** |
+| MaxViT-T | 91.98% | 0.8325 | 0.9840 | 31M | Transformer |
+| **Swin-T** ⭐ | **92.66%** | **0.8493** | **0.9895** | **28M** | **Transformer** |
+| Swin-T Fine-tuned | 🔄 | — | — | 28M | Transformer |
+| DermoNet (ours) | 🔄 | — | — | ~18M | Novel |
 
-> All models trained on the same 6-dataset corpus (35,084 images) with identical augmentation, WeightedRandomSampler, and AdamW + CosineAnnealingLR for fair comparison.
+> All baseline models trained on the same 6-dataset corpus (35,084 images) with identical setup for fair comparison.
+
+### Swin-T Per-Class Performance (Current SOTA)
+| Class | Precision | Recall | F1 | Support |
+|---|---|---|---|---|
+| Melanoma | 0.82 | 0.95 | 0.88 | 636 |
+| Nevi | 0.98 | 0.94 | 0.96 | 2469 |
+| Basal Cell Carcinoma | 0.79 | 0.89 | 0.84 | 133 |
+| Actinic Keratosis | 0.84 | 0.77 | 0.80 | 125 |
+| Benign Keratosis | 0.80 | 0.80 | 0.80 | 133 |
+| Dermatofibroma ⚠️ | 0.80 | 0.89 | 0.84 | 9 |
+| Vascular ⚠️ | 0.73 | 0.92 | 0.81 | 12 |
+
+> ⚠️ Dermatofibroma (n=9) and Vascular (n=12) have very limited test samples — Phase 2 fine-tuning targets these specifically.
 
 ---
 
@@ -49,13 +64,13 @@ DermoGraph-XAI is a comprehensive deep learning framework for automated skin les
 ### Class Distribution
 ![Class Distribution](assets/results/01_class_distribution.png)
 
-### Best Model — MaxViT-T (91.98%)
+### Best Model — Swin-T (92.66%)
 ![MaxViT TP/FP/FN/TN](assets/results/maxvit_t_tp_fp_fn_tn.png)
 
-### MaxViT-T Confusion Matrix
+### Confusion Matrix
 ![MaxViT Confusion Matrix](assets/results/maxvit_t_cm_viridis.png)
 
-### MaxViT-T Training Curves
+### Training Curves
 ![MaxViT Curves](assets/results/maxvit_t_curves.png)
 
 ### EfficientNet-B0 (89.37%)
@@ -67,16 +82,11 @@ DermoGraph-XAI is a comprehensive deep learning framework for automated skin les
 ### Hair Removal Pipeline
 ![Hair Removal](assets/results/hair_removal_samples.png)
 
-### Sample Dataset Images
-![Samples](assets/results/sample_images.png)
-
 ---
 
 ## 🗃️ Datasets
 
-All datasets are hosted on Kaggle. Download and add them as inputs to your Kaggle notebook.
-
-### Core Training Datasets (6 datasets — 35,084 images)
+### Phase 1 — Core Training (6 datasets — 35,084 images)
 
 | Dataset | Images | Classes | Kaggle Link |
 |---|---|---|---|
@@ -87,33 +97,33 @@ All datasets are hosted on Kaggle. Download and add them as inputs to your Kaggl
 | MIDAS | 3,411 | 7 | [dermograph-midas](https://www.kaggle.com/datasets/akshat23029/dermograph-midas) |
 | Train/Val/Test Splits | — | — | [dermograph-splits](https://www.kaggle.com/datasets/akshat23029/dermograph-splits) |
 
-### Extended Datasets (for Innovation Modules)
+### Phase 2 — Minority Class Augmentation (2 datasets — 44,277 images)
 
-| Dataset | Images | Purpose | Kaggle Link |
+| Dataset | Images | DF added | VASC added | BCC added | Kaggle Link |
+|---|---|---|---|---|---|
+| ISIC 2019 | 25,331 | 239 (26×) | 253 (21×) | 3,323 (25×) | [isic-2019-skin-lesion-images](https://www.kaggle.com/datasets/salviohexia/isic-2019-skin-lesion-images-for-classification) |
+| BCN20000 | 18,946 | ~200 | ~200 | ~2,000 | [bcn20000](https://www.kaggle.com/datasets/mathieubecher/bcn20000) |
+
+```
+Phase 1 + Phase 2 combined: ~79,361 images total
+
+Minority class improvement:
+  Dermatofibroma  :   9 → 448  samples  (49× increase)
+  Vascular Lesion :  12 → 465  samples  (39× increase)
+  BCC             : 133 → 5,456 samples  (41× increase)
+```
+
+### Extended Datasets (Innovation Modules)
+
+| Dataset | Images | Purpose | Link |
 |---|---|---|---|
-| FitzPatrick17k | 16,577 | Fairness MTL (skin tone I–VI) | [dermograph-fitzpatrick](https://www.kaggle.com/datasets/akshat23029/dermograph-fitzpatrick) |
-| Derm7pt | 1,011 | ABCDE Branch (7-point checklist) | [dermograph-derm7pt](https://www.kaggle.com/datasets/akshat23029/dermograph-derm7pt) |
-
-### Dataset Split Statistics
-```
-Total images : 35,084
-Train split  : 28,056  (80%)
-Val split    :  3,511  (10%)
-Test split   :  3,517  (10%)
-
-Class distribution (test set):
-  Melanoma             :   636
-  Nevi                 : 2,469
-  Basal Cell Carcinoma :   133
-  Actinic Keratosis    :   125
-  Benign Keratosis     :   133
-  Dermatofibroma       :     9
-  Vascular             :    12
-```
+| FitzPatrick17k | 16,577 | Fairness MTL — skin tone I–VI | [dermograph-fitzpatrick](https://www.kaggle.com/datasets/akshat23029/dermograph-fitzpatrick) |
+| Derm7pt | 1,011 | ABCDE Branch — 7-point checklist | [dermograph-derm7pt](https://www.kaggle.com/datasets/akshat23029/dermograph-derm7pt) |
 
 ---
 
 ## 🏗️ Project Structure
+
 ```
 DermoGraph-XAI/
 ├── notebooks/
@@ -126,17 +136,24 @@ DermoGraph-XAI/
 │   ├── EfficientNet_B3_DermoGraph.ipynb
 │   ├── EfficientNetV2_S_DermoGraph.ipynb
 │   ├── ConvNeXt_Small_DermoGraph.ipynb
-│   ├── Swin_T_DermoGraph.ipynb
+│   ├── Swin_T_DermoGraph.ipynb            ← 🏆 Current SOTA 92.66%
+│   ├── Swin_T_FineTuned_DermoGraph.ipynb  ← 🔄 Phase 2 minority class
 │   ├── ViT_B16_DermoGraph.ipynb
 │   ├── ResNeXt50_DermoGraph.ipynb
 │   ├── DenseNet169_DermoGraph.ipynb
 │   ├── RegNetY_8GF_DermoGraph.ipynb
-│   └── DermoNet_v2.ipynb
-├── assets/results/               ← Plots and visualizations
-├── dermograph_output/            ← Training results, JSONs
+│   └── DermoNet_v2.ipynb                  ← Novel architecture
+├── dermograph/
+│   ├── backend/                           ← FastAPI + model inference
+│   │   ├── main.py
+│   │   ├── requirements.txt
+│   │   └── weights/                       ← .pth files
+│   └── frontend/                          ← React + Tailwind UI
+│       └── src/
+├── assets/results/                        ← Training visualizations
+├── dermograph_output/                     ← JSON benchmark results
 ├── hair_removal_pipeline.py
 ├── dataset_loader.py
-├── preprocessing.py
 └── README.md
 ```
 
@@ -144,115 +161,101 @@ DermoGraph-XAI/
 
 ## 🚀 Quick Start
 
-### 1. Clone the repo
-```bash
-git clone git@github.com:akshat440/DermoGraph-XAI.git
-cd DermoGraph-XAI
-```
+### Run Full System Locally
 
-### 2. Set up environment
+**Backend:**
 ```bash
-python -m venv venv
+cd dermograph/backend
 source venv/bin/activate
-pip install torch torchvision timm albumentations einops scikit-learn opencv-python pandas matplotlib seaborn tqdm
+pip install -r requirements.txt
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+# API docs: http://localhost:8000/docs
 ```
 
-### 3. Run on Kaggle
-1. Create a new Kaggle notebook
-2. Add all datasets via **+ Add Input**
-3. Upload desired notebook from `notebooks/`
-4. Enable GPU (T4 recommended)
+**Frontend:**
+```bash
+cd dermograph/frontend
+npm install && npm run dev
+# Open: http://localhost:3000
+```
+
+### Train on Kaggle
+1. Create new Kaggle notebook
+2. Add datasets via **+ Add Input**
+3. Upload notebook from `notebooks/`
+4. Enable GPU T4
 5. Run all cells
 
 ---
 
 ## 🧠 DermoNet — Novel Architecture
 
-DermoNet is our proposed architecture with three novel components:
-
-### Component 1: DualScaleStem
-```
-Fine branch   (3×3 conv) → captures hair follicles, fine texture
-Coarse branch (7×7 conv) → captures lesion boundary, overall shape
-Learned softmax fusion   → adapts balance per image
-```
-
-### Component 2: Lesion-Aware Attention Gate (LAAG)
-```
-Channel attention  → WHICH features matter (color shift = melanoma)
-Spatial attention  → WHERE to look (borders = BCC, center = DF)
-Border enhancement → depthwise conv highlights lesion edges
-Inspired by ABCDE dermoscopy criteria
-```
-
-### Component 3: Multi-Resolution Transformer Block (MRTB)
-```
-Fine scale   (full res)    → local texture details
-Mid scale    (1/4 res)     → intermediate patterns
-Coarse scale (1/16 res)    → global lesion structure
-Cross-scale attention      → fine features inform coarse decisions
-```
+| Component | Innovation |
+|---|---|
+| DualScaleStem | Parallel 3×3 (fine) + 7×7 (coarse) CNN with learned fusion weights |
+| LAAG ×2 | Lesion-Aware Attention Gate — channel + spatial + border attention |
+| MRTB ×6 | Multi-Resolution Transformer — 3-scale attention (fine + mid + coarse) |
 
 ---
 
 ## ⚙️ Training Configuration
-```python
-BATCH_SIZE   = 32
-N_EPOCHS     = 50
-PATIENCE     = 15
-OPTIMIZER    = AdamW(lr=1e-4, weight_decay=1e-2)
-SCHEDULER    = CosineAnnealingLR(T_max=50, eta_min=1e-6)
-LOSS         = CrossEntropyLoss(weight=class_weights)
-SAMPLER      = WeightedRandomSampler
-AMP          = FP16 mixed precision
-IMAGE_SIZE   = 224×224
-```
 
-### Augmentation Pipeline
-```
-RandomRotate90, Rotate(±180°), HorizontalFlip, VerticalFlip,
-ColorJitter, GaussianBlur, CoarseDropout
+```python
+# Phase 1 — Baseline models
+BATCH_SIZE = 32 | N_EPOCHS = 50 | PATIENCE = 15
+OPTIMIZER  = AdamW(lr=1e-4, wd=1e-2)
+SCHEDULER  = CosineAnnealingLR(T_max=50, eta_min=1e-6)
+LOSS       = CrossEntropyLoss(class_weights)
+IMAGE_SIZE = 224×224
+
+# Phase 2 — Swin-T minority class fine-tuning
+BASE       = swin_t_best.pth (92.66% checkpoint)
+DATASETS   = All 6 original + ISIC2019 + BCN20000
+LOSS       = FocalLoss(gamma=2, alpha=class_weights)
+N_EPOCHS   = 30 | LR = 1e-5
+TARGET     = DF + Vascular + BCC (extreme overweighting)
 ```
 
 ---
 
-## 📈 Innovation Modules (In Progress)
+## 📈 Innovation Modules
 
 | Module | Description | Status |
 |---|---|---|
-| ABCDE Branch | 7-point checklist feature extraction using Derm7pt | 🔄 In Progress |
-| GAT Pattern Graph | Graph Attention Network for lesion pattern relationships | 📋 Planned |
-| Neural ODE | Continuous-depth modeling for lesion evolution | 📋 Planned |
-| Fairness MTL | Multi-task learning for skin tone fairness (FitzPatrick I–VI) | 📋 Planned |
+| **Minority Fine-tuning** | Swin-T + ISIC2019 + BCN20000 targeting DF/VASC/BCC | 🔄 In Progress |
+| ABCDE Branch | 7-point checklist scoring via Derm7pt | 📋 Planned |
+| GAT Pattern Graph | Graph Attention for lesion relationships | 📋 Planned |
+| Neural ODE | Continuous-depth lesion evolution | 📋 Planned |
+| Fairness MTL | Skin tone fairness via FitzPatrick I–VI | 📋 Planned |
 
 ---
 
 ## 📚 Dataset Citations
 
-This project uses the following publicly available datasets. We do not own any of these datasets.
-
 | Dataset | Citation | License |
 |---|---|---|
 | HAM10000 | Tschandl et al., Scientific Data 2018 | CC BY-NC-SA 4.0 |
+| ISIC 2019 | Combalia et al., arXiv 2019 | CC BY-NC-SA 4.0 |
 | ISIC 2020 | Rotemberg et al., Scientific Data 2021 | CC BY-NC-SA 4.0 |
+| BCN20000 | Combalia et al., arXiv 2019 | CC BY-NC-SA 4.0 |
 | PAD-UFES-20 | Pacheco et al., Data in Brief 2020 | CC BY 4.0 |
 | MIDAS | Kaggle Community Dataset | See source |
 | Melanoma Cancer | SIIM-ISIC Challenge 2020 | CC BY-NC-SA 4.0 |
 | FitzPatrick17k | Groh et al., CVPR Workshop 2021 | MIT |
 | Derm7pt | Kawahara et al., IEEE JBHI 2019 | See source |
 
-> All datasets used strictly for academic research purposes.
+> All datasets used strictly for academic research. We do not own any of these datasets.
 
 ---
 
 ## 👥 Team
 
-**Team 8 — VIT Bhopal**  
-B.Tech Final Year Project | Department of Computer Science
+**Team 8 — VIT Bhopal** | B.Tech Final Year Project | Computer Science
 
 ---
 
 ## 📄 Citation
+
 ```bibtex
 @misc{dermographxai2026,
   title  = {DermoGraph-XAI: Multi-Dataset Skin Lesion Classification with Explainable AI},
