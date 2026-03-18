@@ -44,17 +44,29 @@ DermoGraph-XAI is a comprehensive deep learning framework for automated skin les
 ---
 ## 📊 Results
 
-### Benchmark Comparison
-![Benchmark](assets/results/maxvit_t_tp_fp_fn_tn.png)
+### Class Distribution
+![Class Distribution](assets/results/01_class_distribution.png)
 
 ### Best Model — MaxViT-T (91.98%)
+![MaxViT TP/FP/FN/TN](assets/results/maxvit_t_tp_fp_fn_tn.png)
+
+### MaxViT-T Confusion Matrix
 ![MaxViT Confusion Matrix](assets/results/maxvit_t_cm_viridis.png)
 
-### Training Curves — EfficientNet-B0
-![EfficientNet Curves](assets/results/efficientnet_b0_curves.png)
+### MaxViT-T Training Curves
+![MaxViT Curves](assets/results/maxvit_t_curves.png)
 
-### TP/FP/FN/TN Analysis — ResNet50
+### EfficientNet-B0 (89.37%)
+![EfficientNet TP/FP/FN/TN](assets/results/efficientnet_b0_tp_fp_fn_tn.png)
+
+### ResNet50 Baseline
 ![ResNet50 Analysis](assets/results/resnet50_tp_fp_fn_tn.png)
+
+### Hair Removal Pipeline
+![Hair Removal](assets/results/hair_removal_samples.png)
+
+### Sample Dataset Images
+![Samples](assets/results/sample_images.png)
 
 ## 🗃️ Datasets
 
