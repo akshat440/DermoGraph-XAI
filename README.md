@@ -42,6 +42,19 @@ DermoGraph-XAI is a comprehensive deep learning framework for automated skin les
 > All models trained on the same 6-dataset corpus (35,084 images) with identical augmentation, WeightedRandomSampler, and AdamW + CosineAnnealingLR setup for fair comparison.
 
 ---
+## 📊 Results
+
+### Benchmark Comparison
+![Benchmark](assets/results/maxvit_t_tp_fp_fn_tn.png)
+
+### Best Model — MaxViT-T (91.98%)
+![MaxViT Confusion Matrix](assets/results/maxvit_t_cm_viridis.png)
+
+### Training Curves — EfficientNet-B0
+![EfficientNet Curves](assets/results/efficientnet_b0_curves.png)
+
+### TP/FP/FN/TN Analysis — ResNet50
+![ResNet50 Analysis](assets/results/resnet50_tp_fp_fn_tn.png)
 
 ## 🗃️ Datasets
 
