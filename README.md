@@ -1,7 +1,7 @@
 # DermoGraph-XAI 🔬
 
 > **Multi-Dataset Skin Lesion Classification with Explainable AI**  
-> Team 8 | VIT Bhopal | B.Tech Final Year Project
+
 
 [![Python](https://img.shields.io/badge/Python-3.10-blue.svg)](https://python.org)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0-red.svg)](https://pytorch.org)
